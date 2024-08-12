@@ -4,36 +4,50 @@ import java.util.*;
 class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        n = Integer.parseInt(br.readLine());
-        st = new StringTokenizer(br.readLine());
-        a = Integer.parseInt(st.nextToken());
-        b = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(br.readLine());
-        arr = new int[n+1][n+1];
-        for (int i=0;i<m;i++) {
-            st = new StringTokenizer(br.readLine());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-            arr[x][y] = 1;
-            arr[y][x] = 1;
-        }
-        bfs(a, b);
-
-    }
-    static int n,m,a,b;
-    static int [][] arr;
-    static int count = 0;
-    static void bfs(int start, int end) {
-        Queue<Map<Integer,Integer>> q = new LinkedList<>();
-        q.offer();
-        while(!q.isEmpty()) {
-            int now = q.poll();
-            if (now==end) {
-                break;
+        N = Integer.parseInt(br.readLine());
+        arr = new int[N][N];
+        visited = new boolean[N][N];
+        resultarr = new ArrayList<>();
+        String s;
+        for (int i=0;i<N;i++) {
+            s = br.readLine();
+            for (int j=0;j<N;j++) {
+                arr[i][j] = s.charAt(j)-'0';
             }
-            for (int i=0;i<n+1;i++) {
-                if (arr[now][i])
+        }
+        for (int i=0;i<N;i++) {
+            for (int j=0;j<N;j++) {
+                if (arr[i][j]==1) {
+                    result++;
+                    bfs(i,j, 1);
+                }
+            }
+        }
+        System.out.println(result);
+    }
+    static int N;
+    static int[][]arr;
+    static int result = 0;
+    static ArrayList<Integer> resultarr;
+    static boolean [][] visited;
+    static int [] directy = new int [] {0,0,1,-1};
+    static int [] directx = new int [] {1,-1,0,0};
+    static void bfs(int y, int x, int count){
+        Queue<int[]> q = new LinkedList<>();
+        visited[y][x] = true;
+        arr[y][x] = 0;
+        q.offer(new int[]{y,x,count});
+        while(!q.isEmpty()) {
+            int [] now = q.poll();
+            int nowy = now[0];
+            int nowx = now[1];
+            int nowcount = now[2];
+            for (int i=0;i<4;i++) {
+                int nexty = nowy+directy[i];
+                int nextx = nowx+directx[i];
+                if ( 0<= nexty && 0<= nextx && nexty<N && nextx<N && !visited[nexty][nextx] && arr[nexty][nextx]==1) {
+                    q.offer(new int[]{nexty,nextx,nowcount+1});
+                }
             }
         }
     }
